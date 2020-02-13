@@ -8,6 +8,7 @@
 
 plugins {
     `java-library`
+    id("com.github.spotbugs") version "3.0.0"
 }
 
 repositories {
