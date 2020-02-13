@@ -13,74 +13,60 @@ public class ValidatorTest {
 
     @Test
     public void applyWithTwoFailingValidationRulesInFailFastMode() {
-        Validator<String> stringValidator = Validator.of(NUMERIC_STRING, ValidatorMode.FAIL_FAST).and(ALPHABETIC_STRING);
-        ValidationResult validationResult = stringValidator.apply("+-");
-        assertEquals(ValidationStatus.FAIL, validationResult.getStatus());
-        assertEquals(1, validationResult.getFailList().size());
-        assertTrue(validationResult.getSuccessList().isEmpty());
+        ValidationResult validationResult = getValidator(NUMERIC_STRING, ALPHABETIC_STRING, ValidatorMode.FAIL_FAST).apply("+-");
+        assertValidationResult(validationResult, ValidationStatus.FAIL, 0, 1);
     }
 
     @Test
     public void applyWithTwoFailingValidationRulesInFailLastMode() {
-        Validator<String> stringValidator = Validator.of(NUMERIC_STRING, ValidatorMode.FAIL_LAST).and(ALPHABETIC_STRING);
-        ValidationResult validationResult = stringValidator.apply("+-");
-        assertEquals(ValidationStatus.FAIL, validationResult.getStatus());
-        assertEquals(2, validationResult.getFailList().size());
-        assertTrue(validationResult.getSuccessList().isEmpty());
+        ValidationResult validationResult = getValidator(NUMERIC_STRING, ALPHABETIC_STRING, ValidatorMode.FAIL_LAST).apply("+-");
+        assertValidationResult(validationResult, ValidationStatus.FAIL, 0, 2);
     }
 
     @Test
     public void applyWithLastFailingValidationRuleInFailFastMode() {
-        Validator<String> stringValidator = Validator.of(NUMERIC_STRING, ValidatorMode.FAIL_FAST).and(ALPHABETIC_STRING);
-        ValidationResult validationResult = stringValidator.apply("123");
-        assertEquals(ValidationStatus.FAIL, validationResult.getStatus());
-        assertEquals(1, validationResult.getFailList().size());
-        assertEquals(1, validationResult.getSuccessList().size());
+        ValidationResult validationResult = getValidator(NUMERIC_STRING, ALPHABETIC_STRING, ValidatorMode.FAIL_FAST).apply("123");
+        assertValidationResult(validationResult, ValidationStatus.FAIL, 1, 1);
     }
 
     @Test
     public void applyWithLastFailingValidationRulesInFailLastMode() {
-        Validator<String> stringValidator = Validator.of(NUMERIC_STRING, ValidatorMode.FAIL_LAST).and(ALPHABETIC_STRING);
-        ValidationResult validationResult = stringValidator.apply("123");
-        assertEquals(ValidationStatus.FAIL, validationResult.getStatus());
-        assertEquals(1, validationResult.getFailList().size());
-        assertEquals(1, validationResult.getSuccessList().size());
+        ValidationResult validationResult = getValidator(NUMERIC_STRING, ALPHABETIC_STRING, ValidatorMode.FAIL_LAST).apply("123");
+        assertValidationResult(validationResult, ValidationStatus.FAIL, 1, 1);
     }
 
     @Test
     public void applyWithFirstFailingValidationRuleInFailFastMode() {
-        Validator<String> stringValidator = Validator.of(NUMERIC_STRING, ValidatorMode.FAIL_FAST).and(ALPHABETIC_STRING);
-        ValidationResult validationResult = stringValidator.apply("abc");
-        assertEquals(ValidationStatus.FAIL, validationResult.getStatus());
-        assertEquals(1, validationResult.getFailList().size());
-        assertTrue(validationResult.getSuccessList().isEmpty());
+        ValidationResult validationResult = getValidator(NUMERIC_STRING, ALPHABETIC_STRING, ValidatorMode.FAIL_FAST).apply("abc");
+        assertValidationResult(validationResult, ValidationStatus.FAIL, 0, 1);
     }
 
     @Test
     public void applyWithFirstFailingValidationRulesInFailLastMode() {
-        Validator<String> stringValidator = Validator.of(NUMERIC_STRING, ValidatorMode.FAIL_LAST).and(ALPHABETIC_STRING);
-        ValidationResult validationResult = stringValidator.apply("abc");
-        assertEquals(ValidationStatus.FAIL, validationResult.getStatus());
-        assertEquals(1, validationResult.getFailList().size());
-        assertEquals(1, validationResult.getSuccessList().size());
+        ValidationResult validationResult = getValidator(NUMERIC_STRING, ALPHABETIC_STRING, ValidatorMode.FAIL_LAST).apply("abc");
+        assertValidationResult(validationResult, ValidationStatus.FAIL, 1, 1);
     }
 
     @Test
     public void applyWithTwoPassingValidationRulesInFailFastMode() {
-        Validator<String> stringValidator = Validator.of(LESS_THAN_TEN_CHARS, ValidatorMode.FAIL_FAST).and(ALPHABETIC_STRING);
-        ValidationResult validationResult = stringValidator.apply("abc");
-        assertEquals(ValidationStatus.SUCCESS, validationResult.getStatus());
-        assertTrue(validationResult.getFailList().isEmpty());
-        assertEquals(2, validationResult.getSuccessList().size());
+        ValidationResult validationResult = getValidator(LESS_THAN_TEN_CHARS, ALPHABETIC_STRING, ValidatorMode.FAIL_FAST).apply("abc");
+        assertValidationResult(validationResult, ValidationStatus.SUCCESS, 2, 0);
     }
 
     @Test
     public void applyWithTwoPassingValidationRulesInFailLastMode() {
-        Validator<String> stringValidator = Validator.of(LESS_THAN_TEN_CHARS, ValidatorMode.FAIL_LAST).and(ALPHABETIC_STRING);
-        ValidationResult validationResult = stringValidator.apply("abc");
-        assertEquals(ValidationStatus.SUCCESS, validationResult.getStatus());
-        assertTrue(validationResult.getFailList().isEmpty());
-        assertEquals(2, validationResult.getSuccessList().size());
+        ValidationResult validationResult = getValidator(LESS_THAN_TEN_CHARS, ALPHABETIC_STRING, ValidatorMode.FAIL_LAST).apply("abc");
+        assertValidationResult(validationResult, ValidationStatus.SUCCESS, 2, 0);
+    }
+
+    private Validator<String> getValidator(ValidationRule<String> firstRule, ValidationRule<String> secondRule, ValidatorMode validatorMode) {
+        return Validator.of(firstRule, validatorMode).and(secondRule);
+    }
+
+    private void assertValidationResult(ValidationResult validationResult, ValidationStatus validationStatus, int successListSize, int failListSize) {
+        assertEquals(validationStatus, validationResult.getStatus());
+        assertEquals(successListSize, validationResult.getSuccessList().size());
+        assertEquals(failListSize, validationResult.getFailList().size());
     }
 
 }
