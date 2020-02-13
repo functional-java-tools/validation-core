@@ -15,13 +15,17 @@ public class Validator<T> implements Function<T, ValidationResult> {
     private List<ValidationRule<T>> validationRuleList = new ArrayList<>();
     private ValidatorMode mode;
 
-    public Validator(ValidationRule<T> ruleToValidate, ValidatorMode validatorMode) {
+    private Validator(ValidationRule<T> ruleToValidate, ValidatorMode validatorMode) {
         this.validationRuleList.add(ruleToValidate);
         this.mode = validatorMode;
     }
 
-    public Validator(ValidationRule<T> ruleToValidate) {
-        this(ruleToValidate, FAIL_LAST);
+    public static <T> Validator<T> of(ValidationRule<T> ruleToValidate, ValidatorMode validatorMode) {
+        return new Validator<>(ruleToValidate, validatorMode);
+    }
+
+    public static <T> Validator<T> of(ValidationRule<T> ruleToValidate) {
+        return new Validator<>(ruleToValidate, FAIL_LAST);
     }
 
     public Validator<T> and(ValidationRule<T> ruleToValidate) {
