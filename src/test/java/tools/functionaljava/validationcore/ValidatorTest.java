@@ -3,7 +3,6 @@ package tools.functionaljava.validationcore;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ValidatorTest {
 
@@ -57,6 +56,14 @@ public class ValidatorTest {
     public void applyWithTwoPassingValidationRulesInFailLastMode() {
         ValidationResult validationResult = getValidator(LESS_THAN_TEN_CHARS, ALPHABETIC_STRING, ValidatorMode.FAIL_LAST).apply("abc");
         assertValidationResult(validationResult, ValidationStatus.SUCCESS, 2, 0);
+    }
+
+    @Test
+    public void getValidatorWithDefaultMode() {
+        ValidationResult validationResult = Validator.of(NUMERIC_STRING)
+                .and(ALPHABETIC_STRING)
+                .apply("abc");
+        assertValidationResult(validationResult, ValidationStatus.FAIL, 1, 1);
     }
 
     private Validator<String> getValidator(ValidationRule<String> firstRule, ValidationRule<String> secondRule, ValidatorMode validatorMode) {
