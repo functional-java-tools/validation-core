@@ -9,6 +9,7 @@
 plugins {
     `java-library`
     id("com.github.spotbugs") version "3.0.0"
+    jacoco
 }
 
 repositories {
@@ -24,3 +25,44 @@ val test by tasks.getting(Test::class) {
     // Use junit platform for unit tests
     useJUnitPlatform()
 }
+
+tasks.withType<com.github.spotbugs.SpotBugsTask> {
+    reports {
+        xml.isEnabled = false
+        html.isEnabled = true
+    }
+}
+tasks {
+    jacocoTestReport {
+        reports {
+            xml.isEnabled = true
+            html.isEnabled = true
+        }
+    }
+
+    jacocoTestCoverageVerification {
+        dependsOn(jacocoTestReport)
+
+        violationRules {
+            rule {
+                limit {
+                    counter = "INSTRUCTION"
+                    minimum = "0.8".toBigDecimal()
+                }
+                limit {
+                    counter = "BRANCH"
+                    minimum = "0.8".toBigDecimal()
+                }
+            }
+        }
+    }
+
+    check {
+        dependsOn(jacocoTestCoverageVerification)
+    }
+}
+
+
+
+
+
