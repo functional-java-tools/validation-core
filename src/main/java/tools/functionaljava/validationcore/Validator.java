@@ -1,7 +1,7 @@
 package tools.functionaljava.validationcore;
 
 
-import tools.functionaljava.validationcore.ValidationResult.ValidationResulBuilder;
+import tools.functionaljava.validationcore.ValidationResult.ValidationResultBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,16 +35,16 @@ public class Validator<T> implements Function<T, ValidationResult> {
 
     @Override
     public ValidationResult apply(T t) {
-        ValidationResulBuilder validationResulBuilder = new ValidationResulBuilder();
+        ValidationResultBuilder validationResultBuilder = new ValidationResultBuilder();
 
         for (ValidationRule<T> validationRule : validationRuleList) {
             ValidationRuleResult validationRuleResult = validationRule.apply(t);
-            validationResulBuilder.withValidationRuleResult(validationRuleResult);
+            validationResultBuilder.withValidationRuleResult(validationRuleResult);
             if (mode == FAIL_FAST && validationRuleResult.getValidationStatus() == FAIL) {
                 break;
             }
         }
 
-        return validationResulBuilder.build();
+        return validationResultBuilder.build();
     }
 }

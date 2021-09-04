@@ -34,11 +34,11 @@ public class ValidationResult {
                 .orElseThrow(() -> new ValidationException(String.join(",", failList)));
     }
 
-    static class ValidationResulBuilder {
+    static class ValidationResultBuilder {
         private List<String> successList = new ArrayList<>();
         private List<String> failList = new ArrayList<>();
 
-        ValidationResulBuilder withValidationRuleResult(ValidationRuleResult validationRuleResult) {
+        ValidationResultBuilder withValidationRuleResult(ValidationRuleResult validationRuleResult) {
             if (validationRuleResult.getValidationStatus() == ValidationStatus.SUCCESS) {
                 successList.add(validationRuleResult.getRuleName());
             } else {

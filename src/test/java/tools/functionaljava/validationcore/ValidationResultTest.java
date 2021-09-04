@@ -1,7 +1,7 @@
 package tools.functionaljava.validationcore;
 
 import org.junit.jupiter.api.Test;
-import tools.functionaljava.validationcore.ValidationResult.ValidationResulBuilder;
+import tools.functionaljava.validationcore.ValidationResult.ValidationResultBuilder;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -13,7 +13,7 @@ class ValidationResultTest {
 
     @Test
     public void validationResultIsFailedAndThrowException() {
-        assertThrows(ValidationException.class, () -> new ValidationResulBuilder()
+        assertThrows(ValidationException.class, () -> new ValidationResultBuilder()
                 .withValidationRuleResult(FAILED)
                 .build()
                 .throwException());
@@ -22,7 +22,7 @@ class ValidationResultTest {
     @Test
     public void validationResultIsSuccessAndDoNotThrowException() {
         try {
-            new ValidationResulBuilder()
+            new ValidationResultBuilder()
                     .withValidationRuleResult(SUCCESS)
                     .build()
                     .throwException();
